@@ -340,7 +340,6 @@ class CornersProblem(search.SearchProblem):
         return successors
 
 
-
     def getCostOfActions(self, actions):
         """
         Returns the cost of a particular sequence of actions.  If those actions
@@ -372,6 +371,25 @@ def cornersHeuristic(state, problem):
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
     "*** YOUR CODE HERE ***"
+    def manhattanHeuristic(currentState, goalState):
+        x1,y1, = currentState[0]
+        x2,y2, = goalState
+        return abs(x1 - x2) + abs(y1 - y2)
+        
+    unvisited = []
+    for corner in corners:
+        if corner not in state[1]:
+            unvisited.append(corner)
+
+    manhattanDistances = []
+    for corner in unvisited:
+        manhattanDistances.append(manhattanHeuristic(state, corner))
+
+    print manhattanDistances
+    closest = min(manhattanDistances)
+    print closest
+
+    return closest
     #Manhattan distance is admissible and consistent
     #Need to track which corners have already been visited(can use state[1] for this)
     #Find manhattandistance for all corners
