@@ -371,32 +371,34 @@ def cornersHeuristic(state, problem):
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
     "*** YOUR CODE HERE ***"
+    
+    #Manhattan distance is admissible and consistent
+    #Find manhattandistance for all corners that have not been visited in current state
+    #return the minimum of those as our heuristic.
     def manhattanHeuristic(currentState, goalState):
         x1,y1, = currentState[0]
         x2,y2, = goalState
         return abs(x1 - x2) + abs(y1 - y2)
         
+    #If our state is a goal state, return 0.
+    if state[0] in corners:
+        return 0
+
     unvisited = []
     for corner in corners:
         if corner not in state[1]:
             unvisited.append(corner)
 
     manhattanDistances = []
-    for corner in unvisited:
-        manhattanDistances.append(manhattanHeuristic(state, corner))
+    #print "Unvisited: ", unvisited
+    for corner in unvisited:#for every corner in unvisited 
+        if corner not in state[1]:#that we have not already visited in this current state  
+            manhattanDistances.append(manhattanHeuristic(state, corner))
 
-    print manhattanDistances
+    #print "mannhattan: ", manhattanDistances
     closest = min(manhattanDistances)
-    print closest
 
     return closest
-    #Manhattan distance is admissible and consistent
-    #Need to track which corners have already been visited(can use state[1] for this)
-    #Find manhattandistance for all corners
-    #If visitedCorners<3, heuristic will return cost to closest corner
-    #If it is = 3, it will be the distance to the last corner
-
-    return 0 # Default to trivial solution
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
@@ -490,7 +492,33 @@ def foodHeuristic(state, problem):
     """
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
-    return 0
+    def manhattanHeuristic(currentState, goalState):
+        x1,y1, = currentState[0]
+        x2,y2, = goalState
+        return abs(x1 - x2) + abs(y1 - y2)
+        
+    #If our state is a goal state, return 0.
+    if state[0] in foodGrid.asList():
+        return 0
+
+    unvisited = []
+    for node in foodGrid.asList():
+        if node not in state[1]:
+            unvisited.append(node)
+
+    manhattanDistances = []
+    #print "Unvisited: ", unvisited
+    for node in unvisited:#for every corner in unvisited 
+        if node not in state[1]:#that we have not already visited in this current state  
+            manhattanDistances.append(manhattanHeuristic(state, node))
+
+    #print "mannhattan: ", manhattanDistances
+    if (manhattanDistances != []):
+        closest = min(manhattanDistances)
+    else: 
+        return 0
+
+    return closest
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
