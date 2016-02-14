@@ -371,7 +371,7 @@ def cornersHeuristic(state, problem):
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
     "*** YOUR CODE HERE ***"
-    
+
     #Manhattan distance is admissible and consistent
     #Find manhattandistance for all corners that have not been visited in current state
     #return the minimum of those as our heuristic.
@@ -392,7 +392,9 @@ def cornersHeuristic(state, problem):
             if (util.manhattanDistance(state[0], corner) < closest):#If our current closest is higher than the next manhattan distance
                 closest = util.manhattanDistance(state[0], corner)#Find the manhattan distance to that corner from our current state.
                 closestCorner = corner
-    #print "mannhattan: ", manhattanDistances
+
+    if len(state[1]) == 3:
+        return closest
 
     secondClosest = corners[0]
     nextClosest = 99999
@@ -507,7 +509,6 @@ def foodHeuristic(state, problem):
         if node not in state[1]:
             unvisited.append(node)
 
-    manhattanDistances = []
     #print "Unvisited: ", unvisited
     closest = 99999
     for node in unvisited:#for every corner in unvisited 
@@ -515,7 +516,6 @@ def foodHeuristic(state, problem):
             if (util.manhattanDistance(state[0], node) < closest):
                 closest = util.manhattanDistance(state[0], node)
 
-    #print "mannhattan: ", manhattanDistances
     if (unvisited != []):
         return closest
     else: 
