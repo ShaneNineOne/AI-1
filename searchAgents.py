@@ -399,12 +399,14 @@ def cornersHeuristic(state, problem):
     secondClosest = corners[0]
     nextClosest = 99999
     for corner in unvisited:#for every corner in unvisited 
-        if corner not in state[1]:#that we have not already visited in this current state
+        if corner not in state[1] and corner != closestCorner:#that we have not already visited in this current state
             if (util.manhattanDistance(closestCorner, corner) < closest):#If our current closest is higher than the next manhattan distance
                 nextClosest = util.manhattanDistance(closestCorner, corner)
                 secondClosest = corner
+    
 
     return closest + nextClosest
+
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
