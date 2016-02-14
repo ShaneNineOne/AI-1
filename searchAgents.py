@@ -375,30 +375,34 @@ def cornersHeuristic(state, problem):
     #Manhattan distance is admissible and consistent
     #Find manhattandistance for all corners that have not been visited in current state
     #return the minimum of those as our heuristic.
-    def manhattanHeuristic(currentState, goalState):
-        x1,y1, = currentState[0]
-        x2,y2, = goalState
-        return abs(x1 - x2) + abs(y1 - y2)
         
-    #If our state is a goal state, return 0.
-    if state[0] in corners:
+    if state[0] in corners:  #If our state is a goal state, return 0.
         return 0
 
     unvisited = []
-    for corner in corners:
+    for corner in corners:#Get every unvisited corner in a list
         if corner not in state[1]:
             unvisited.append(corner)
 
-    manhattanDistances = []
+    closest = 99999#Ridiculously high number so that min will always be less than it
+    closestCorner = corners[0]
     #print "Unvisited: ", unvisited
     for corner in unvisited:#for every corner in unvisited 
         if corner not in state[1]:#that we have not already visited in this current state  
-            manhattanDistances.append(manhattanHeuristic(state, corner))
-
+            if (util.manhattanDistance(state[0], corner) < closest):#If our current closest is higher than the next manhattan distance
+                closest = util.manhattanDistance(state[0], corner)#Find the manhattan distance to that corner from our current state.
+                closestCorner = corner
     #print "mannhattan: ", manhattanDistances
-    closest = min(manhattanDistances)
 
-    return closest
+    secondClosest = corners[0]
+    nextClosest = 99999
+    for corner in unvisited:#for every corner in unvisited 
+        if corner not in state[1]:#that we have not already visited in this current state
+            if (util.manhattanDistance(closestCorner, corner) < closest):#If our current closest is higher than the next manhattan distance
+                nextClosest = util.manhattanDistance(closestCorner, corner)
+                secondClosest = corner
+
+    return closest + nextClosest
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
@@ -492,10 +496,7 @@ def foodHeuristic(state, problem):
     """
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
-    def manhattanHeuristic(currentState, goalState):
-        x1,y1, = currentState[0]
-        x2,y2, = goalState
-        return abs(x1 - x2) + abs(y1 - y2)
+
         
     #If our state is a goal state, return 0.
     if state[0] in foodGrid.asList():
@@ -508,13 +509,15 @@ def foodHeuristic(state, problem):
 
     manhattanDistances = []
     #print "Unvisited: ", unvisited
+    closest = 99999
     for node in unvisited:#for every corner in unvisited 
         if node not in state[1]:#that we have not already visited in this current state  
-            manhattanDistances.append(manhattanHeuristic(state, node))
+            if (util.manhattanDistance(state[0], node) < closest):
+                closest = util.manhattanDistance(state[0], node)
 
     #print "mannhattan: ", manhattanDistances
-    if (manhattanDistances != []):
-        closest = min(manhattanDistances)
+    if (unvisited != []):
+        return closest
     else: 
         return 0
 
