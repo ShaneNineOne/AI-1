@@ -383,28 +383,18 @@ def cornersHeuristic(state, problem):
     for corner in corners:#Get every unvisited corner in a list
         if corner not in state[1]:
             unvisited.append(corner)
-
-    closest = 99999#Ridiculously high number so that min will always be less than it
-    closestCorner = corners[0]
-    #print "Unvisited: ", unvisited
-    for corner in unvisited:#for every corner in unvisited 
-        if corner not in state[1]:#that we have not already visited in this current state  
-            if (util.manhattanDistance(state[0], corner) < closest):#If our current closest is higher than the next manhattan distance
-                closest = util.manhattanDistance(state[0], corner)#Find the manhattan distance to that corner from our current state.
-                closestCorner = corner
-
-    if len(state[1]) == 3:
-        return closest
-
-    secondClosest = corners[0]
-    nextClosest = 99999
-    for corner in unvisited:#for every corner in unvisited 
-        if corner not in state[1]:#that we have not already visited in this current state
-            if (util.manhattanDistance(closestCorner, corner) < closest):#If our current closest is higher than the next manhattan distance
-                nextClosest = util.manhattanDistance(closestCorner, corner)
-                secondClosest = corner
-
-    return closest + nextClosest
+    
+    distance = 0;
+    node = state[0]
+    while (len(unvisited) != 0):
+        distances = []
+        for corner in unvisited:#for every corner in unvisited 
+            distances.append(util.manhattanDistance(node, corner))
+            distances.append(corner)
+        distance = distance + min(distances)
+        unvisited.remove(distances[distances.index(min(distances)) + 1])
+                    
+    return distance
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
@@ -514,10 +504,12 @@ def foodHeuristic(state, problem):
 
     #print "Unvisited: ", unvisited
     closest = 99999
+    closestNode = state[0]
     for node in unvisited:#for every corner in unvisited 
         if node not in state[1]:#that we have not already visited in this current state  
             if (util.manhattanDistance(state[0], node) < closest):
                 closest = util.manhattanDistance(state[0], node)
+                closestNode = node
 
     return closest
 
